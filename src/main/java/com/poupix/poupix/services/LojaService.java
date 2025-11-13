@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,35 +23,31 @@ public class LojaService {
     private final LojaMapper mapper = new LojaMapper();
 
     public LojaResponseDTO criar(LojaCreateDTO dto) {
-        Loja loja = mapper.toEntity(dto);
+        var loja = mapper.toEntity(dto);
         return mapper.toResponseDTO(lojaRepository.save(loja));
     }
 
-    public List<LojaResponseDTO> listarTodas(Boolean favorito, String categoria) {
-        boolean filtrarFavorito = Boolean.TRUE.equals(favorito);
-        boolean filtrarCategoria = categoria != null && !categoria.isBlank();
-
-        List<Loja> lojas = switch ((filtrarFavorito ? 1 : 0) + (filtrarCategoria ? 2 : 0)) {
-            case 3 -> lojaRepository.findByFavoritoTrueAndCategoriaIgnoreCase(categoria);
-            case 2 -> lojaRepository.findByCategoriaIgnoreCase(categoria);
-            case 1 -> lojaRepository.findByFavoritoTrue();
-            default -> lojaRepository.findAll();
-        };
-
-        return mapper.toResponseDTOList(lojas);
+    public List<Loja> listar(Boolean favorito, String categoria) {
+        return lojaRepository.findByFilters(favorito, categoria);
     }
 
     public LojaResponseDTO buscarPorId(Long id) {
-        Loja loja = lojaRepository.findById(id)
+        var loja = lojaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
         return mapper.toResponseDTO(loja);
     }
 
     public LojaResponseDTO atualizar(Long id, LojaUpdateDTO dto) {
-        Loja loja = lojaRepository.findById(id)
+        var loja = lojaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
         mapper.updateFromDto(dto, loja);
         return mapper.toResponseDTO(lojaRepository.save(loja));
+    }
+
+    public void favoritar(Long id){
+        var loja = lojaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
+        loja.setFavorito(!loja.getFavorito());
     }
 
     public void deletar(Long id) {

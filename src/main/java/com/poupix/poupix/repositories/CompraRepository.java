@@ -5,25 +5,19 @@ import com.poupix.poupix.enums.Pagamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface CompraRepository extends JpaRepository<Compra, Long> {
-
     @Query("""
-                SELECT c FROM Compra c
-                WHERE EXTRACT(YEAR FROM c.data) = :ano
-                AND EXTRACT(MONTH FROM c.data) = :mes
-                ORDER BY c.data
+            SELECT c FROM Compra c
+            JOIN FETCH c.loja
+            WHERE YEAR(c.data) = :ano
+            AND MONTH(c.data) = :mes
+            AND (:pagamento IS NULL OR c.formaDePagamento = :pagamento)
+            ORDER BY c.data
             """)
-    List<Compra> findByAnoAndMes(@Param("ano") int ano, @Param("mes") int mes);
-
-    @Query("""
-                SELECT c FROM Compra c
-                WHERE EXTRACT(YEAR FROM c.data) = :ano
-                AND EXTRACT(MONTH FROM c.data) = :mes
-                AND c.formaDePagamento = :pagamento
-                ORDER BY c.data
-            """)
-    List<Compra> findByAnoAndMesAndPagamento(@Param("ano") int ano, @Param("mes") int mes, @Param("pagamento") Pagamento pagamento);
+    List<Compra> findByFilters(@Param("ano") int ano, @Param("mes") int mes, @Param("pagamento") Pagamento pagamento);
 }
