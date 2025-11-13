@@ -3,6 +3,8 @@ package com.poupix.poupix.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "loja")
 @Getter
@@ -24,4 +26,15 @@ public class Loja {
 
     @Column(nullable = false)
     private Boolean favorito = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Loja loja)) return false;
+        return Objects.equals(id, loja.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

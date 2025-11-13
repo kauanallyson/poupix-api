@@ -2,6 +2,8 @@ package com.poupix.poupix.entities;
 
 import com.poupix.poupix.enums.Pagamento;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -27,9 +29,11 @@ public class Compra {
     @JoinColumn(name = "loja_id")
     private Loja loja;
 
+    @Positive
     @Column(nullable = false)
     private BigDecimal preco;
 
+    @PastOrPresent
     @Column(nullable = false)
     private LocalDate data;
 
