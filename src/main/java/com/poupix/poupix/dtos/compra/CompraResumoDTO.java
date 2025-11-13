@@ -1,6 +1,6 @@
-package com.poupix.poupix.compra.dto;
+package com.poupix.poupix.dtos.compra;
 
-import com.poupix.poupix.compra.Pagamento;
+import com.poupix.poupix.enums.Pagamento;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

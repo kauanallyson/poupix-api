@@ -1,4 +1,4 @@
-package com.poupix.poupix.compra.dto;
+package com.poupix.poupix.dtos.compra;
 
 import java.math.BigDecimal;
 import java.util.List;

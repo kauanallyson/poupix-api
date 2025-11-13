@@ -1,10 +1,13 @@
-package com.poupix.poupix.compra;
+package com.poupix.poupix.services;
 
-import com.poupix.poupix.compra.dto.*;
-import com.poupix.poupix.compra.mapper.CompraMapper;
+import com.poupix.poupix.dtos.compra.*;
+import com.poupix.poupix.mappers.CompraMapper;
+import com.poupix.poupix.entities.Compra;
+import com.poupix.poupix.enums.Pagamento;
 import com.poupix.poupix.exceptions.ResourceNotFoundException;
-import com.poupix.poupix.loja.Loja;
-import com.poupix.poupix.loja.LojaRepository;
+import com.poupix.poupix.entities.Loja;
+import com.poupix.poupix.repositories.CompraRepository;
+import com.poupix.poupix.repositories.LojaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

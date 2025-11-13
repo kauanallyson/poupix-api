@@ -1,4 +1,4 @@
-package com.poupix.poupix.loja.dto;
+package com.poupix.poupix.dtos.loja;
 
 public record LojaResponseDTO(
         Long id,

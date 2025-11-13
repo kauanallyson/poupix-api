@@ -1,8 +1,9 @@
-package com.poupix.poupix.loja;
+package com.poupix.poupix.controllers;
 
-import com.poupix.poupix.loja.dto.LojaCreateDTO;
-import com.poupix.poupix.loja.dto.LojaResponseDTO;
-import com.poupix.poupix.loja.dto.LojaUpdateDTO;
+import com.poupix.poupix.dtos.loja.LojaCreateDTO;
+import com.poupix.poupix.dtos.loja.LojaResponseDTO;
+import com.poupix.poupix.dtos.loja.LojaUpdateDTO;
+import com.poupix.poupix.services.LojaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

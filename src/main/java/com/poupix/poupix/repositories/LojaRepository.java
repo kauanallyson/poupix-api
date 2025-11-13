@@ -1,5 +1,6 @@
-package com.poupix.poupix.loja;
+package com.poupix.poupix.repositories;
 
+import com.poupix.poupix.entities.Loja;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

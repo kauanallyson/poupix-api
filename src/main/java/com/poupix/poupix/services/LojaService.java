@@ -1,10 +1,12 @@
-package com.poupix.poupix.loja;
+package com.poupix.poupix.services;
 
+import com.poupix.poupix.entities.Loja;
 import com.poupix.poupix.exceptions.ResourceNotFoundException;
-import com.poupix.poupix.loja.dto.LojaCreateDTO;
-import com.poupix.poupix.loja.dto.LojaResponseDTO;
-import com.poupix.poupix.loja.dto.LojaUpdateDTO;
-import com.poupix.poupix.loja.mapper.LojaMapper;
+import com.poupix.poupix.dtos.loja.LojaCreateDTO;
+import com.poupix.poupix.dtos.loja.LojaResponseDTO;
+import com.poupix.poupix.dtos.loja.LojaUpdateDTO;
+import com.poupix.poupix.mappers.LojaMapper;
+import com.poupix.poupix.repositories.LojaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

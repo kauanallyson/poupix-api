@@ -1,4 +1,4 @@
-package com.poupix.poupix.loja;
+package com.poupix.poupix.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

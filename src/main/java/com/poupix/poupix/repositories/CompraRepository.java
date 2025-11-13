@@ -1,5 +1,7 @@
-package com.poupix.poupix.compra;
+package com.poupix.poupix.repositories;
 
+import com.poupix.poupix.entities.Compra;
+import com.poupix.poupix.enums.Pagamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

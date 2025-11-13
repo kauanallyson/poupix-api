@@ -1,6 +1,6 @@
-package com.poupix.poupix.compra;
+package com.poupix.poupix.entities;
 
-import com.poupix.poupix.loja.Loja;
+import com.poupix.poupix.enums.Pagamento;
 import jakarta.persistence.*;
 import lombok.*;
 

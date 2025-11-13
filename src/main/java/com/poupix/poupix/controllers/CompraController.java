@@ -1,10 +1,13 @@
-package com.poupix.poupix.compra;
+package com.poupix.poupix.controllers;
 
-import com.poupix.poupix.compra.dto.CompraCreateDTO;
-import com.poupix.poupix.compra.dto.CompraResumoDTO;
-import com.poupix.poupix.compra.dto.CompraUpdateDTO;
-import com.poupix.poupix.compra.dto.RelatorioMensalDTO;
-import com.poupix.poupix.compra.mapper.CompraMapper;
+import com.poupix.poupix.dtos.compra.CompraCreateDTO;
+import com.poupix.poupix.dtos.compra.CompraResumoDTO;
+import com.poupix.poupix.dtos.compra.CompraUpdateDTO;
+import com.poupix.poupix.dtos.compra.RelatorioMensalDTO;
+import com.poupix.poupix.mappers.CompraMapper;
+import com.poupix.poupix.entities.Compra;
+import com.poupix.poupix.enums.Pagamento;
+import com.poupix.poupix.services.CompraService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

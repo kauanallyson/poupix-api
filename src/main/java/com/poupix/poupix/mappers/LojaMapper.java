@@ -1,9 +1,9 @@
-package com.poupix.poupix.loja.mapper;
+package com.poupix.poupix.mappers;
 
-import com.poupix.poupix.loja.Loja;
-import com.poupix.poupix.loja.dto.LojaCreateDTO;
-import com.poupix.poupix.loja.dto.LojaResponseDTO;
-import com.poupix.poupix.loja.dto.LojaUpdateDTO;
+import com.poupix.poupix.entities.Loja;
+import com.poupix.poupix.dtos.loja.LojaCreateDTO;
+import com.poupix.poupix.dtos.loja.LojaResponseDTO;
+import com.poupix.poupix.dtos.loja.LojaUpdateDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

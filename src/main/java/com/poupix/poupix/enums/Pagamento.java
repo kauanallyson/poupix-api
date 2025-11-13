@@ -1,4 +1,4 @@
-package com.poupix.poupix.compra;
+package com.poupix.poupix.enums;
 
 public enum Pagamento {
     PIX,
