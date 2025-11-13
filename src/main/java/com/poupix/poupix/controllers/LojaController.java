@@ -63,7 +63,6 @@ public class LojaController {
         return ResponseEntity.ok(response);
     }
 
-
     // Deletar
     @Transactional
     @DeleteMapping("/{id}")
