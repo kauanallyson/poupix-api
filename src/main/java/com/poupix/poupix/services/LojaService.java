@@ -44,10 +44,11 @@ public class LojaService {
         return mapper.toResponseDTO(lojaRepository.save(loja));
     }
 
-    public void favoritar(Long id){
+    public Boolean favoritar(Long id){
         var loja = lojaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
         loja.setFavorito(!loja.getFavorito());
+        return loja.getFavorito();
     }
 
     public void deletar(Long id) {
