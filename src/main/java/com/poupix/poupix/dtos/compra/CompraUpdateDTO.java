@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record CompraUpdateDTO(
-        @Size(max = 100, message = "A descrição deve ter entre 3 e 100 caracteres")
+        @Size(min = 3, max = 100, message = "A descrição deve ter entre 3 e 100 caracteres")
         String descricao,
 
         Long lojaId,

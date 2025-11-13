@@ -12,4 +12,7 @@ public record LojaCreateDTO(
 
         Boolean favorito
 ) {
+    public LojaCreateDTO {
+        favorito = favorito != null ? favorito : false;
+    }
 }
