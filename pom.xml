@@ -12,7 +12,7 @@
     <artifactId>poupix</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Poupix</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Sistema de gestão de compras</description>
     <url/>
     <licenses>
         <license/>
@@ -76,6 +76,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>4.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -91,6 +96,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>
