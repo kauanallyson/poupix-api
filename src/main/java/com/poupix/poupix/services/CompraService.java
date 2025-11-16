@@ -2,9 +2,9 @@ package com.poupix.poupix.services;
 
 import com.poupix.poupix.dtos.compra.*;
 import com.poupix.poupix.entities.Compra;
-import com.poupix.poupix.entities.Loja;
 import com.poupix.poupix.enums.Pagamento;
-import com.poupix.poupix.exceptions.ResourceNotFoundException;
+import com.poupix.poupix.finders.CompraFinder;
+import com.poupix.poupix.finders.LojaFinder;
 import com.poupix.poupix.mappers.CompraMapper;
 import com.poupix.poupix.repositories.CompraRepository;
 import com.poupix.poupix.repositories.LojaRepository;
@@ -22,38 +22,44 @@ import java.util.stream.Collectors;
 public class CompraService {
 
     private final CompraRepository compraRepository;
-    private final CompraMapper mapper;
+    private final LojaRepository lojaRepository;
+    private final CompraFinder compraFinder;
+    private final LojaFinder lojaFinder;
+    private final CompraMapper compraMapper;
 
     @Transactional
-    public Compra criar(CompraCreateDTO dto) {
-        var compra = mapper.toEntity(dto);
-        return compraRepository.save(compra);
+    public void criar(CompraCreateDTO dto) {
+        var loja = lojaFinder.buscarPorId(dto.lojaId());
+        var compra = compraMapper.toEntity(dto, loja);
+        compraRepository.save(compra);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<CompraResponseDTO> listarComFiltros(int ano, int mes, Pagamento pagamento) {
+        var compras = compraRepository.findByFilters(ano,mes,pagamento);
+        return compraMapper.toResumoDTOList(compras);
     }
 
     @Transactional(readOnly = true)
-    public List<Compra> listar() {
-        return compraRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Compra buscarPorId(Long id) {
-        return compraRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Compra com id " + id + " não encontrada"));
+    public CompraResponseDTO buscarPorId(Long id) {
+        var compra = compraFinder.buscarPorId(id);
+        return compraMapper.toResponseDTO(compra);
     }
 
     @Transactional
-    public Compra atualizar(Long id, CompraUpdateDTO dto) {
-        var compra = compraRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Compra com id " + id + " não encontrada"));
+    public CompraResponseDTO atualizar(Long id, CompraUpdateDTO dto) {
+        var loja = lojaFinder.buscarPorId(dto.lojaId());
+        var compra = compraFinder.buscarPorId(id);
 
-        mapper.updateCompraFromDto(dto, compra);
-        return compraRepository.save(compra);
+        compraMapper.updateCompraFromDto(dto, compra, loja);
+        compraRepository.save(compra);
+        return compraMapper.toResponseDTO(compra);
     }
 
     @Transactional
     public void deletar(Long id) {
-        var compra = compraRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Compra com id " + id + " não encontrada"));
+        var compra = compraFinder.buscarPorId(id);
         compraRepository.delete(compra);
     }
 
@@ -67,24 +73,28 @@ public class CompraService {
             return criarRelatorioVazio(ano, mes);
         }
 
-        var totalGasto = calcularTotalGasto(compras);
+        BigDecimal totalGasto = calcularTotalGasto(compras);
 
-        var gastoPorLoja = calcularGastoPorLoja(compras);
+        Map<String, BigDecimal> gastoPorLoja = calcularGastoPorLoja(compras);
 
-        var gastoPorPagamento = calcularGastoPorPagamento(compras);
+        Map<Pagamento, BigDecimal> gastoPorPagamento = calcularGastoPorPagamento(compras);
 
-        var totalPorLoja = gastoPorLoja.entrySet().stream()
+        List<ResumoLojaDTO> totalPorLoja = gastoPorLoja.entrySet().stream()
                 .map(entry -> new ResumoLojaDTO(entry.getKey(), entry.getValue()))
                 .toList();
 
-        var totalPorPagamento = gastoPorPagamento.entrySet().stream()
+        List<ResumoPagamentoDTO> totalPorPagamento = gastoPorPagamento.entrySet().stream()
                 .map(entry -> new ResumoPagamentoDTO(entry.getKey(), entry.getValue()))
                 .toList();
 
-        var comprasResumo = mapper.toResumoDTOList(compras);
+        List<CompraResponseDTO> compraResponse = compraMapper.toResumoDTOList(compras);
 
-        return new RelatorioMensalDTO(ano, mes, totalGasto, totalPorLoja, totalPorPagamento, comprasResumo);
+        return new RelatorioMensalDTO(ano, mes, totalGasto, totalPorLoja, totalPorPagamento, compraResponse);
     }
+
+    /*
+     * MÉTODOS PRIVADOS
+     * */
 
     private void validarAnoMes(int ano, int mes) {
         if (ano < 2000 || ano > 2100) {
@@ -103,8 +113,7 @@ public class CompraService {
                 BigDecimal.ZERO,
                 List.of(),
                 List.of(),
-                List.of()
-        );
+                List.of());
     }
 
     private List<Compra> buscarComprasDoMes(int ano, int mes, Pagamento pagamento) {
@@ -121,15 +130,13 @@ public class CompraService {
         return compras.stream()
                 .collect(Collectors.groupingBy(
                         compra -> compra.getLoja().getNome(),
-                        Collectors.reducing(BigDecimal.ZERO, Compra::getPreco, BigDecimal::add)
-                ));
+                        Collectors.reducing(BigDecimal.ZERO, Compra::getPreco, BigDecimal::add)));
     }
 
     private Map<Pagamento, BigDecimal> calcularGastoPorPagamento(List<Compra> compras) {
         return compras.stream()
                 .collect(Collectors.groupingBy(
                         Compra::getFormaDePagamento,
-                        Collectors.reducing(BigDecimal.ZERO, Compra::getPreco, BigDecimal::add)
-                ));
+                        Collectors.reducing(BigDecimal.ZERO, Compra::getPreco, BigDecimal::add)));
     }
 }

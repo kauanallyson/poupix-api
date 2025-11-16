@@ -14,8 +14,8 @@ public interface CompraRepository extends JpaRepository<Compra, Long> {
     @Query("""
             SELECT c FROM Compra c
             JOIN FETCH c.loja
-            WHERE YEAR(c.data) = :ano
-            AND MONTH(c.data) = :mes
+            WHERE (:ano is NULL OR YEAR(c.data) = :ano)
+            AND (:mes is NULL OR MONTH(c.data) = :mes)
             AND (:pagamento IS NULL OR c.formaDePagamento = :pagamento)
             ORDER BY c.data
             """)
