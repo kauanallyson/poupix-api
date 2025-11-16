@@ -1,12 +1,10 @@
 package com.poupix.poupix.controllers;
 
 import com.poupix.poupix.dtos.compra.CompraCreateDTO;
-import com.poupix.poupix.dtos.compra.CompraResumoDTO;
+import com.poupix.poupix.dtos.compra.CompraResponseDTO;
 import com.poupix.poupix.dtos.compra.CompraUpdateDTO;
 import com.poupix.poupix.dtos.compra.RelatorioMensalDTO;
-import com.poupix.poupix.entities.Compra;
 import com.poupix.poupix.enums.Pagamento;
-import com.poupix.poupix.mappers.CompraMapper;
 import com.poupix.poupix.services.CompraService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -14,9 +12,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,46 +20,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompraController {
     private final CompraService compraService;
-    private final CompraMapper compraMapper;
 
     // Criar
     @PostMapping
     public ResponseEntity<Void> criar(@Valid @RequestBody CompraCreateDTO dto) {
-        Compra compra = compraService.criar(dto);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(compra.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).build();
+        compraService.criar(dto);
+        return ResponseEntity.ok().build();
     }
 
-    // Listar todas
+    // Listar com filtros
     @GetMapping
-    public ResponseEntity<List<CompraResumoDTO>> listar() {
-        List<Compra> compras = compraService.listar();
-        List<CompraResumoDTO> dtos = compraMapper.toResumoDTOList(compras);
-        return ResponseEntity.ok(dtos);
+    public ResponseEntity<List<CompraResponseDTO>> listarComFiltro(
+            @RequestParam(required = false) @Min(2000) @Max(2100) int ano,
+            @RequestParam(required = false) @Min(1) @Max(12) int mes,
+            @RequestParam(required = false) Pagamento pagamento
+    ) {
+        var response = compraService.listarComFiltros(ano, mes, pagamento);
+        return ResponseEntity.ok(response);
     }
 
     // Buscar por id
     @GetMapping("/{id}")
-    public ResponseEntity<CompraResumoDTO> buscarPorId(@PathVariable Long id) {
-        Compra compra = compraService.buscarPorId(id);
-        CompraResumoDTO dto = compraMapper.toResumoDTO(compra);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<CompraResponseDTO> buscarPorId(@PathVariable Long id) {
+        var response = compraService.buscarPorId(id);
+        return ResponseEntity.ok(response);
     }
 
     // Atualizar
     @PutMapping("/{id}")
-    public ResponseEntity<CompraResumoDTO> atualizar(
+    public ResponseEntity<CompraResponseDTO> atualizar(
             @PathVariable Long id,
             @Valid @RequestBody CompraUpdateDTO dto
     ) {
-        Compra compra = compraService.atualizar(id, dto);
-        CompraResumoDTO response = compraMapper.toResumoDTO(compra);
+        var response = compraService.atualizar(id, dto);
         return ResponseEntity.ok(response);
     }
 
@@ -81,6 +70,7 @@ public class CompraController {
             @PathVariable @Min(1) @Max(12) int mes,
             @RequestParam(required = false) Pagamento pagamento
     ) {
-        return ResponseEntity.ok(compraService.relatorioMensal(ano, mes, pagamento));
+        var response = compraService.relatorioMensal(ano, mes, pagamento);
+        return ResponseEntity.ok(response);
     }
 }

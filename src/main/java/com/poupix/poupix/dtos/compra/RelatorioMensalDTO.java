@@ -14,6 +14,6 @@ public record RelatorioMensalDTO(
         BigDecimal totalGasto,
         List<ResumoLojaDTO> totalPorLoja,
         List<ResumoPagamentoDTO> totalPorPagamento,
-        List<CompraResumoDTO> compras
+        List<CompraResponseDTO> compras
 ) {
 }

@@ -1,12 +1,10 @@
 package com.poupix.poupix.mappers;
 
-import com.poupix.poupix.entities.Compra;
 import com.poupix.poupix.dtos.compra.CompraCreateDTO;
-import com.poupix.poupix.dtos.compra.CompraResumoDTO;
+import com.poupix.poupix.dtos.compra.CompraResponseDTO;
 import com.poupix.poupix.dtos.compra.CompraUpdateDTO;
-import com.poupix.poupix.exceptions.ResourceNotFoundException;
+import com.poupix.poupix.entities.Compra;
 import com.poupix.poupix.entities.Loja;
-import com.poupix.poupix.repositories.LojaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +13,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class CompraMapper {
-    private final LojaRepository lojaRepository;
 
-    public void updateCompraFromDto(CompraUpdateDTO dto, Compra compra) {
-        Loja loja = lojaRepository.findById(dto.lojaId())
-                .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + dto.lojaId() + " não encontrada"));
-
+    public void updateCompraFromDto(CompraUpdateDTO dto, Compra compra, Loja loja) {
         compra.setDescricao(dto.descricao());
         compra.setLoja(loja);
         compra.setPreco(dto.preco());
@@ -28,8 +22,8 @@ public class CompraMapper {
         compra.setFormaDePagamento(dto.formaDePagamento());
     }
 
-    public CompraResumoDTO toResumoDTO(Compra compra) {
-        return new CompraResumoDTO(
+    public CompraResponseDTO toResponseDTO(Compra compra) {
+        return new CompraResponseDTO(
                 compra.getId(),
                 compra.getDescricao(),
                 compra.getLoja().getNome(),
@@ -38,14 +32,11 @@ public class CompraMapper {
                 compra.getFormaDePagamento());
     }
 
-    public List<CompraResumoDTO> toResumoDTOList(List<Compra> compras) {
-        return compras.stream().map(this::toResumoDTO).toList();
+    public List<CompraResponseDTO> toResumoDTOList(List<Compra> compras) {
+        return compras.stream().map(this::toResponseDTO).toList();
     }
 
-    public Compra toEntity(CompraCreateDTO dto) {
-        Loja loja = lojaRepository.findById(dto.lojaId())
-                .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + dto.lojaId() + " não encontrada"));
-
+    public Compra toEntity(CompraCreateDTO dto, Loja loja) {
         return Compra.builder()
                 .descricao(dto.descricao())
                 .loja(loja)

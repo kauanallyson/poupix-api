@@ -5,7 +5,7 @@ import com.poupix.poupix.enums.Pagamento;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record CompraResumoDTO(
+public record CompraResponseDTO(
         Long id,
         String descricao,
         String nomeLoja,
