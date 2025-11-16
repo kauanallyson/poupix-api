@@ -1,12 +1,13 @@
 package com.poupix.poupix.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "loja")
+@Table(name = "lojas")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,14 +19,14 @@ public class Loja {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String nome;
 
     @Column(length = 100)
     private String categoria;
 
     @Column(nullable = false)
-    private Boolean favorito = false;
+    private Boolean favorito;
 
     @Override
     public boolean equals(Object o) {

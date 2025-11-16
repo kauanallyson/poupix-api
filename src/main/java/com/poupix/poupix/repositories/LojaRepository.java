@@ -14,6 +14,7 @@ public interface LojaRepository extends JpaRepository<Loja, Long> {
             SELECT l FROM Loja l
             WHERE (:favorito IS NULL OR l.favorito = :favorito)
             AND (:categoria IS NULL OR LOWER(l.categoria) = LOWER(:categoria))
+            ORDER BY l.favorito
             """)
     List<Loja> findByFilters(@Param("favorito") Boolean favorito, @Param("categoria") String categoria);
 }

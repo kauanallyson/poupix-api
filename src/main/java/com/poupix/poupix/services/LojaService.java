@@ -1,59 +1,62 @@
 package com.poupix.poupix.services;
 
-import com.poupix.poupix.entities.Loja;
-import com.poupix.poupix.exceptions.ResourceNotFoundException;
 import com.poupix.poupix.dtos.loja.LojaCreateDTO;
 import com.poupix.poupix.dtos.loja.LojaResponseDTO;
 import com.poupix.poupix.dtos.loja.LojaUpdateDTO;
+import com.poupix.poupix.finders.LojaFinder;
 import com.poupix.poupix.mappers.LojaMapper;
 import com.poupix.poupix.repositories.LojaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class LojaService {
 
     private final LojaRepository lojaRepository;
-    private final LojaMapper mapper = new LojaMapper();
+    private final LojaFinder lojaFinder;
+    private final LojaMapper lojaMapper;
 
-    public LojaResponseDTO criar(LojaCreateDTO dto) {
-        var loja = mapper.toEntity(dto);
-        return mapper.toResponseDTO(lojaRepository.save(loja));
+    @Transactional
+    public void criar(LojaCreateDTO dto) {
+        var loja = lojaMapper.toEntity(dto);
+        lojaRepository.save(loja);
     }
 
-    public List<Loja> listar(Boolean favorito, String categoria) {
-        return lojaRepository.findByFilters(favorito, categoria);
+    @Transactional(readOnly = true)
+    public List<LojaResponseDTO> listarComFiltros(Boolean favorito, String categoria) {
+        var lojas = lojaRepository.findByFilters(favorito, categoria);
+        return lojaMapper.toResponseDTOList(lojas);
     }
 
+    @Transactional(readOnly = true)
     public LojaResponseDTO buscarPorId(Long id) {
-        var loja = lojaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
-        return mapper.toResponseDTO(loja);
+        var loja = lojaFinder.buscarPorId(id);
+        return lojaMapper.toResponseDTO(loja);
     }
 
+    @Transactional
     public LojaResponseDTO atualizar(Long id, LojaUpdateDTO dto) {
-        var loja = lojaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
-        mapper.updateFromDto(dto, loja);
-        return mapper.toResponseDTO(lojaRepository.save(loja));
+        var loja = lojaFinder.buscarPorId(id);
+        lojaMapper.updateFromDto(dto, loja);
+        lojaRepository.save(loja);
+        return lojaMapper.toResponseDTO(loja);
     }
 
-    public Boolean favoritar(Long id){
-        var loja = lojaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Loja com id " + id + " não encontrada"));
-        loja.setFavorito(!loja.getFavorito());
-        return loja.getFavorito();
-    }
-
+    @Transactional
     public void deletar(Long id) {
-        if (!lojaRepository.existsById(id))
-            throw new ResourceNotFoundException("Loja com id " + id + " não encontrada");
+        lojaFinder.buscarPorId(id);
         lojaRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Map<String, Boolean> favoritar(Long id) {
+        var loja = lojaFinder.buscarPorId(id);
+        loja.setFavorito(!loja.getFavorito());
+        return Map.of("favorito", loja.getFavorito());
     }
 }
