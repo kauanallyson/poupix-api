@@ -1,9 +1,9 @@
 package com.poupix.poupix.controllers;
 
-import com.poupix.poupix.dtos.compra.CompraCreateDTO;
-import com.poupix.poupix.dtos.compra.CompraResponseDTO;
-import com.poupix.poupix.dtos.compra.CompraUpdateDTO;
-import com.poupix.poupix.dtos.compra.RelatorioMensalDTO;
+import com.poupix.poupix.dtos.compra.CompraCreate;
+import com.poupix.poupix.dtos.compra.CompraResponse;
+import com.poupix.poupix.dtos.compra.CompraUpdate;
+import com.poupix.poupix.dtos.compra.RelatorioMensal;
 import com.poupix.poupix.enums.Pagamento;
 import com.poupix.poupix.services.CompraService;
 import jakarta.validation.Valid;
@@ -23,14 +23,14 @@ public class CompraController {
 
     // Criar
     @PostMapping
-    public ResponseEntity<Void> criar(@Valid @RequestBody CompraCreateDTO dto) {
-        compraService.criar(dto);
+    public ResponseEntity<Void> criar(@Valid @RequestBody CompraCreate request) {
+        compraService.criar(request);
         return ResponseEntity.ok().build();
     }
 
     // Listar com filtros
     @GetMapping
-    public ResponseEntity<List<CompraResponseDTO>> listarComFiltro(
+    public ResponseEntity<List<CompraResponse>> listarComFiltro(
             @RequestParam(required = false) @Min(2000) @Max(2100) int ano,
             @RequestParam(required = false) @Min(1) @Max(12) int mes,
             @RequestParam(required = false) Pagamento pagamento
@@ -41,18 +41,18 @@ public class CompraController {
 
     // Buscar por id
     @GetMapping("/{id}")
-    public ResponseEntity<CompraResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<CompraResponse> buscarPorId(@PathVariable Long id) {
         var response = compraService.buscarPorId(id);
         return ResponseEntity.ok(response);
     }
 
     // Atualizar
     @PutMapping("/{id}")
-    public ResponseEntity<CompraResponseDTO> atualizar(
+    public ResponseEntity<CompraResponse> atualizar(
             @PathVariable Long id,
-            @Valid @RequestBody CompraUpdateDTO dto
+            @Valid @RequestBody CompraUpdate request
     ) {
-        var response = compraService.atualizar(id, dto);
+        var response = compraService.atualizar(id, request);
         return ResponseEntity.ok(response);
     }
 
@@ -65,7 +65,7 @@ public class CompraController {
 
     // Relatorio por mes com filtro
     @GetMapping("/relatorio/{ano}/{mes}")
-    public ResponseEntity<RelatorioMensalDTO> relatorioMensal(
+    public ResponseEntity<RelatorioMensal> relatorioMensal(
             @PathVariable @Min(2000) @Max(2100) int ano,
             @PathVariable @Min(1) @Max(12) int mes,
             @RequestParam(required = false) Pagamento pagamento

@@ -4,7 +4,7 @@ import com.poupix.poupix.enums.Pagamento;
 
 import java.math.BigDecimal;
 
-public record ResumoPagamentoDTO(
+public record ResumoPagamento(
         Pagamento formaDePagamento,
         BigDecimal totalGasto
 ) {

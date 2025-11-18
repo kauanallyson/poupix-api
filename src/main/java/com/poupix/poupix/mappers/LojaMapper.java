@@ -1,8 +1,8 @@
 package com.poupix.poupix.mappers;
 
-import com.poupix.poupix.dtos.loja.LojaCreateDTO;
-import com.poupix.poupix.dtos.loja.LojaResponseDTO;
-import com.poupix.poupix.dtos.loja.LojaUpdateDTO;
+import com.poupix.poupix.dtos.loja.LojaCreate;
+import com.poupix.poupix.dtos.loja.LojaResponse;
+import com.poupix.poupix.dtos.loja.LojaUpdate;
 import com.poupix.poupix.entities.Loja;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class LojaMapper {
 
-    public Loja toEntity(LojaCreateDTO dto) {
+    public Loja toEntity(LojaCreate dto) {
         return Loja.builder()
                 .nome(dto.nome())
                 .categoria(dto.categoria())
@@ -19,8 +19,8 @@ public class LojaMapper {
                 .build();
     }
 
-    public LojaResponseDTO toResponseDTO(Loja loja) {
-        return new LojaResponseDTO(
+    public LojaResponse toResponseDTO(Loja loja) {
+        return new LojaResponse(
                 loja.getId(),
                 loja.getNome(),
                 loja.getCategoria(),
@@ -28,11 +28,11 @@ public class LojaMapper {
         );
     }
 
-    public List<LojaResponseDTO> toResponseDTOList(List<Loja> lojas) {
+    public List<LojaResponse> toResponseDTOList(List<Loja> lojas) {
         return lojas.stream().map(this::toResponseDTO).toList();
     }
 
-    public void updateFromDto(LojaUpdateDTO dto, Loja loja) {
+    public void updateFromDto(LojaUpdate dto, Loja loja) {
         if (dto.nome() != null) loja.setNome(dto.nome());
         if (dto.categoria() != null) loja.setCategoria(dto.categoria());
         if (dto.favorito() != null) loja.setFavorito(dto.favorito());

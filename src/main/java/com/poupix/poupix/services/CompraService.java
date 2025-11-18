@@ -7,7 +7,6 @@ import com.poupix.poupix.finders.CompraFinder;
 import com.poupix.poupix.finders.LojaFinder;
 import com.poupix.poupix.mappers.CompraMapper;
 import com.poupix.poupix.repositories.CompraRepository;
-import com.poupix.poupix.repositories.LojaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +21,12 @@ import java.util.stream.Collectors;
 public class CompraService {
 
     private final CompraRepository compraRepository;
-    private final LojaRepository lojaRepository;
     private final CompraFinder compraFinder;
     private final LojaFinder lojaFinder;
     private final CompraMapper compraMapper;
 
     @Transactional
-    public void criar(CompraCreateDTO dto) {
+    public void criar(CompraCreate dto) {
         var loja = lojaFinder.buscarPorId(dto.lojaId());
         var compra = compraMapper.toEntity(dto, loja);
         compraRepository.save(compra);
@@ -36,19 +34,19 @@ public class CompraService {
 
 
     @Transactional(readOnly = true)
-    public List<CompraResponseDTO> listarComFiltros(int ano, int mes, Pagamento pagamento) {
-        var compras = compraRepository.findByFilters(ano,mes,pagamento);
+    public List<CompraResponse> listarComFiltros(int ano, int mes, Pagamento pagamento) {
+        var compras = compraRepository.findByFilters(ano, mes, pagamento);
         return compraMapper.toResumoDTOList(compras);
     }
 
     @Transactional(readOnly = true)
-    public CompraResponseDTO buscarPorId(Long id) {
+    public CompraResponse buscarPorId(Long id) {
         var compra = compraFinder.buscarPorId(id);
         return compraMapper.toResponseDTO(compra);
     }
 
     @Transactional
-    public CompraResponseDTO atualizar(Long id, CompraUpdateDTO dto) {
+    public CompraResponse atualizar(Long id, CompraUpdate dto) {
         var loja = lojaFinder.buscarPorId(dto.lojaId());
         var compra = compraFinder.buscarPorId(id);
 
@@ -64,7 +62,7 @@ public class CompraService {
     }
 
     @Transactional(readOnly = true)
-    public RelatorioMensalDTO relatorioMensal(int ano, int mes, Pagamento pagamento) {
+    public RelatorioMensal relatorioMensal(int ano, int mes, Pagamento pagamento) {
         validarAnoMes(ano, mes);
 
         var compras = buscarComprasDoMes(ano, mes, pagamento);
@@ -79,17 +77,17 @@ public class CompraService {
 
         Map<Pagamento, BigDecimal> gastoPorPagamento = calcularGastoPorPagamento(compras);
 
-        List<ResumoLojaDTO> totalPorLoja = gastoPorLoja.entrySet().stream()
-                .map(entry -> new ResumoLojaDTO(entry.getKey(), entry.getValue()))
+        List<ResumoLoja> totalPorLoja = gastoPorLoja.entrySet().stream()
+                .map(entry -> new ResumoLoja(entry.getKey(), entry.getValue()))
                 .toList();
 
-        List<ResumoPagamentoDTO> totalPorPagamento = gastoPorPagamento.entrySet().stream()
-                .map(entry -> new ResumoPagamentoDTO(entry.getKey(), entry.getValue()))
+        List<ResumoPagamento> totalPorPagamento = gastoPorPagamento.entrySet().stream()
+                .map(entry -> new ResumoPagamento(entry.getKey(), entry.getValue()))
                 .toList();
 
-        List<CompraResponseDTO> compraResponse = compraMapper.toResumoDTOList(compras);
+        List<CompraResponse> compraResponse = compraMapper.toResumoDTOList(compras);
 
-        return new RelatorioMensalDTO(ano, mes, totalGasto, totalPorLoja, totalPorPagamento, compraResponse);
+        return new RelatorioMensal(ano, mes, totalGasto, totalPorLoja, totalPorPagamento, compraResponse);
     }
 
     /*
@@ -106,8 +104,8 @@ public class CompraService {
         }
     }
 
-    private RelatorioMensalDTO criarRelatorioVazio(int ano, int mes) {
-        return new RelatorioMensalDTO(
+    private RelatorioMensal criarRelatorioVazio(int ano, int mes) {
+        return new RelatorioMensal(
                 ano,
                 mes,
                 BigDecimal.ZERO,

@@ -1,8 +1,8 @@
 package com.poupix.poupix.mappers;
 
-import com.poupix.poupix.dtos.compra.CompraCreateDTO;
-import com.poupix.poupix.dtos.compra.CompraResponseDTO;
-import com.poupix.poupix.dtos.compra.CompraUpdateDTO;
+import com.poupix.poupix.dtos.compra.CompraCreate;
+import com.poupix.poupix.dtos.compra.CompraResponse;
+import com.poupix.poupix.dtos.compra.CompraUpdate;
 import com.poupix.poupix.entities.Compra;
 import com.poupix.poupix.entities.Loja;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompraMapper {
 
-    public void updateCompraFromDto(CompraUpdateDTO dto, Compra compra, Loja loja) {
+    public void updateCompraFromDto(CompraUpdate dto, Compra compra, Loja loja) {
         compra.setDescricao(dto.descricao());
         compra.setLoja(loja);
         compra.setPreco(dto.preco());
@@ -22,8 +22,8 @@ public class CompraMapper {
         compra.setFormaDePagamento(dto.formaDePagamento());
     }
 
-    public CompraResponseDTO toResponseDTO(Compra compra) {
-        return new CompraResponseDTO(
+    public CompraResponse toResponseDTO(Compra compra) {
+        return new CompraResponse(
                 compra.getId(),
                 compra.getDescricao(),
                 compra.getLoja().getNome(),
@@ -32,11 +32,11 @@ public class CompraMapper {
                 compra.getFormaDePagamento());
     }
 
-    public List<CompraResponseDTO> toResumoDTOList(List<Compra> compras) {
+    public List<CompraResponse> toResumoDTOList(List<Compra> compras) {
         return compras.stream().map(this::toResponseDTO).toList();
     }
 
-    public Compra toEntity(CompraCreateDTO dto, Loja loja) {
+    public Compra toEntity(CompraCreate dto, Loja loja) {
         return Compra.builder()
                 .descricao(dto.descricao())
                 .loja(loja)

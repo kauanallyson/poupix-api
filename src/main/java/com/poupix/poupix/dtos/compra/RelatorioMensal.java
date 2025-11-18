@@ -6,14 +6,14 @@ import jakarta.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record RelatorioMensalDTO(
+public record RelatorioMensal(
         @Min(2000) @Max(2100)
         int ano,
         @Min(1) @Max(12)
         int mes,
         BigDecimal totalGasto,
-        List<ResumoLojaDTO> totalPorLoja,
-        List<ResumoPagamentoDTO> totalPorPagamento,
-        List<CompraResponseDTO> compras
+        List<ResumoLoja> totalPorLoja,
+        List<ResumoPagamento> totalPorPagamento,
+        List<CompraResponse> compras
 ) {
 }

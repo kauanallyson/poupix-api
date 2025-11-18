@@ -1,7 +1,6 @@
 package com.poupix.poupix.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Objects;

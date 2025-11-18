@@ -10,22 +10,23 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
 
+    @Column(unique = true)
     private String email;
 
-    private String senha;
+    private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,12 +35,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.nome;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.senha;
+        return email;
     }
 
     @Override
@@ -64,8 +60,8 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Usuario usuario)) return false;
-        return Objects.equals(id, usuario.id);
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id);
     }
 
     @Override

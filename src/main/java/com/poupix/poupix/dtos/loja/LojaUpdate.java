@@ -2,7 +2,7 @@ package com.poupix.poupix.dtos.loja;
 
 import jakarta.validation.constraints.Size;
 
-public record LojaUpdateDTO(
+public record LojaUpdate(
         @Size(max = 100)
         String nome,
 

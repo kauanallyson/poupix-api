@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record CompraUpdateDTO(
+public record CompraUpdate(
         @Size(min = 3, max = 100, message = "A descrição deve ter entre 3 e 100 caracteres")
         String descricao,
 

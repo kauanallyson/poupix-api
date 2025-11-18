@@ -3,7 +3,7 @@ package com.poupix.poupix.dtos.loja;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record LojaCreateDTO(
+public record LojaCreate(
         @NotBlank @Size(max = 100)
         String nome,
 
@@ -12,7 +12,7 @@ public record LojaCreateDTO(
 
         Boolean favorito
 ) {
-    public LojaCreateDTO {
+    public LojaCreate {
         favorito = favorito != null ? favorito : false;
     }
 }

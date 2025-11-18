@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CompraFinder {
     private final CompraRepository compraRepository;
+
     public Compra buscarPorId(Long id) {
         return compraRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Compra com id " + id + " não encontrada"));

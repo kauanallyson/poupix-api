@@ -1,8 +1,8 @@
 package com.poupix.poupix.services;
 
-import com.poupix.poupix.dtos.loja.LojaCreateDTO;
-import com.poupix.poupix.dtos.loja.LojaResponseDTO;
-import com.poupix.poupix.dtos.loja.LojaUpdateDTO;
+import com.poupix.poupix.dtos.loja.LojaCreate;
+import com.poupix.poupix.dtos.loja.LojaResponse;
+import com.poupix.poupix.dtos.loja.LojaUpdate;
 import com.poupix.poupix.finders.LojaFinder;
 import com.poupix.poupix.mappers.LojaMapper;
 import com.poupix.poupix.repositories.LojaRepository;
@@ -22,25 +22,25 @@ public class LojaService {
     private final LojaMapper lojaMapper;
 
     @Transactional
-    public void criar(LojaCreateDTO dto) {
+    public void criar(LojaCreate dto) {
         var loja = lojaMapper.toEntity(dto);
         lojaRepository.save(loja);
     }
 
     @Transactional(readOnly = true)
-    public List<LojaResponseDTO> listarComFiltros(Boolean favorito, String categoria) {
+    public List<LojaResponse> listarComFiltros(Boolean favorito, String categoria) {
         var lojas = lojaRepository.findByFilters(favorito, categoria);
         return lojaMapper.toResponseDTOList(lojas);
     }
 
     @Transactional(readOnly = true)
-    public LojaResponseDTO buscarPorId(Long id) {
+    public LojaResponse buscarPorId(Long id) {
         var loja = lojaFinder.buscarPorId(id);
         return lojaMapper.toResponseDTO(loja);
     }
 
     @Transactional
-    public LojaResponseDTO atualizar(Long id, LojaUpdateDTO dto) {
+    public LojaResponse atualizar(Long id, LojaUpdate dto) {
         var loja = lojaFinder.buscarPorId(id);
         lojaMapper.updateFromDto(dto, loja);
         lojaRepository.save(loja);
